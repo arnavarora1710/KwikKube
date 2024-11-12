@@ -15,5 +15,3 @@ def loadData(train = True):
     dir = "train" if train else "test"
     return np.load(f'../data/{dir}/cube.npy')
 
-makeData(num_samples=30, config = "f2l", train = True)
-print(loadData())
