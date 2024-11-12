@@ -13,6 +13,15 @@ color_map = {
     'B': 0b101   # Blue
 }
 
+code_map = {
+    0b000 : 'W',
+    0b001 : 'G',
+    0b010 : 'R',
+    0b011 : 'O',
+    0b100 : 'Y',
+    0b101 : 'B'
+}
+
 def getRandomScramble(moves):
     scramble(moves)
 
@@ -26,6 +35,17 @@ def encodeCube(cube):
             encoded_face.append(encoded_row)
         encoded_cube.append(encoded_face)
     return encoded_cube
+
+def decodeCube(cube):
+    global code_map
+    decoded_cube = []
+    for face in cube:
+        decoded_face = []
+        for row in face:
+            decoded_row = [code_map[color] for color in row]
+            decoded_face.append(decoded_row)
+        decoded_cube.append(decoded_face)
+    return decoded_cube
 
 def getToDesired(config="random"):
     make_cube()
@@ -41,3 +61,7 @@ def getToDesired(config="random"):
         pass
     return encodeCube(get_cube())
 
+def solveNow(cube):
+    a = decodeCube(cube)
+    solve()
+    return get_moves()
