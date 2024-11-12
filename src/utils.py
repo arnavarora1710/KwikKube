@@ -22,6 +22,24 @@ code_map = {
     0b101 : 'B'
 }
 
+move_map = {
+    'F': 0, 'F\'': 1, 'F2': 2,
+    'R': 3, 'R\'': 4, 'R2': 5,
+    'U': 6, 'U\'': 7, 'U2': 8,
+    'L': 9, 'L\'': 10, 'L2': 11,
+    'B': 12, 'B\'': 13, 'B2': 14,
+    'D': 15, 'D\'': 16, 'D2': 17
+}
+
+reverse_move_map = {
+    0: 'F', 1: 'F\'', 2: 'F2',
+    3: 'R', 4: 'R\'', 5: 'R2',
+    6: 'U', 7: 'U\'', 8: 'U2',
+    9: 'L', 10: 'L\'', 11: 'L2',
+    12: 'B', 13: 'B\'', 14: 'B2',
+    15: 'D', 16: 'D\'', 17: 'D2'
+}
+
 def getRandomScramble(moves):
     scramble(moves)
 
@@ -47,6 +65,17 @@ def decodeCube(cube):
         decoded_cube.append(decoded_face)
     return decoded_cube
 
+def encodeMoves(moves):
+    global move_map
+    move_list = moves.split()
+    encoded_moves = [move_map[move] for move in move_list]
+    return encoded_moves
+
+def decodeMoves(encoded_moves):
+    global reverse_move_map
+    decoded_moves = [reverse_move_map[code] for code in encoded_moves]
+    return " ".join(decoded_moves)
+
 def getToDesired(config="random"):
     make_cube()
     getRandomScramble(30)
@@ -64,4 +93,9 @@ def getToDesired(config="random"):
 def solveNow(cube):
     a = decodeCube(cube)
     solve()
-    return get_moves()
+    return encodeMoves(get_moves())
+
+def doMoves(cube, moves):
+    a = decodeCube(cube)
+    m(decodeMoves(moves))
+    return encodeCube(get_cube())
