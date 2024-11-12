@@ -27,7 +27,7 @@ def encodeCube(cube):
         encoded_cube.append(encoded_face)
     return encoded_cube
 
-def getToDesired(config="solved"):
+def getToDesired(config="random"):
     make_cube()
     getRandomScramble(30)
     if config == "cross":
@@ -37,5 +37,7 @@ def getToDesired(config="solved"):
         f2l()
     elif config == "solved":
         solve()
+    else:
+        pass
     return encodeCube(get_cube())
 
