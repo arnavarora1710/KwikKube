@@ -25,3 +25,6 @@ def loadData(train = True):
     for k, v in cube_moves.items():
         ret2.append(v.tolist())
     return (ret1, ret2)
+
+makeData(num_samples=10000, config = "f2l", train = True)
+makeData(num_samples=10000, config = "random", train = False)
