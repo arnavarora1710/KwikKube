@@ -32,10 +32,3 @@ def constructSeq(outputs, targets):
             predicted_seq.append(predicted_move)
         ret.append(predicted_seq)
     return ret
-
-def loss_func(my_seq, good_seq):
-    ans = 0
-    for i in range(len(my_seq)):
-        for j in range(len(my_seq[i])):
-            ans += (my_seq[i][j] - good_seq[i][j]) ** 2
-    return ans
