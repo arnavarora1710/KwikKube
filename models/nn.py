@@ -19,5 +19,23 @@ class KwikKubeNN(nn.Module):
         x = F.relu(self.input_layer(x))
         for layer in self.hidden_layers:
             x = F.relu(layer(x))
-        x = self.output_layer(x)
+        x = F.softmax(self.output_layer(x), dim=-1)
         return x
+
+def constructSeq(outputs, targets):
+    ret = []
+    for i in range(len(outputs)):
+        predicted_seq = []
+        for t in range(len(targets[i])):
+            probs = outputs[i]
+            predicted_move = torch.multinomial(probs, 1).item()
+            predicted_seq.append(predicted_move)
+        ret.append(predicted_seq)
+    return ret
+
+def loss_func(my_seq, good_seq):
+    ans = 0
+    for i in range(len(my_seq)):
+        for j in range(len(my_seq[i])):
+            ans += (my_seq[i][j] - good_seq[i][j]) ** 2
+    return ans
