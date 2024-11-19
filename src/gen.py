@@ -21,6 +21,7 @@ def loadData(train = True):
     dir = "train" if train else "test"
     ret1 = []
     ret2 = []
+    print(dir)
     cube = np.load(f"../data/{dir}/cube.npz")
     cube_moves = np.load(f"../data/{dir}/cube_moves.npz")
     for k, v in cube.items():
@@ -29,5 +30,5 @@ def loadData(train = True):
         ret2.append(v.tolist())
     return (ret1, ret2)
 
-makeData(num_samples=10000, config = "f2l", train = True)
-makeData(num_samples=10000, config = "random", train = False)
+# makeData(num_samples=10000, config = "f2l", train = True)
+# makeData(num_samples=100, config = "random", train = False)

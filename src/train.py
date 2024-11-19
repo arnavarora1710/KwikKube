@@ -77,3 +77,5 @@ for epoch in range(num_epochs):
     train_loss = train(model, train_loader, criterion, optimizer, device)
     val_loss = evaluate(model, val_loader, criterion, device)
     print(f"Train Loss: {train_loss:.4f} | Validation Loss: {val_loss:.4f}")
+
+torch.save(model.state_dict(), "model.pt")
