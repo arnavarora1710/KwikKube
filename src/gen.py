@@ -2,12 +2,15 @@ from utils import *
 import numpy as np
 
 def makeData(num_samples = 1, config = "random", train = True):
+    STOP = 18
     data = []
     move_data = []
     for _ in range(num_samples):
         cube = getToDesired(config = config)
         tmp_cube = cube.copy()
         solve_moves = solveNow(tmp_cube)
+        while (len(solve_moves) < 200):
+            solve_moves.append(STOP)
         data.append(cube)
         move_data.append(solve_moves)
     dir = "train" if train else "test"

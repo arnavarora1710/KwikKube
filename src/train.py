@@ -23,10 +23,9 @@ def train(model, dataloader, criterion, optimizer, device):
         inputs, targets = inputs.to(device), targets.to(device)
         optimizer.zero_grad()
         outputs = model(inputs)
-        seq = constructSeq(outputs, targets)
-        seq = torch.tensor(seq).float().clone().detach().requires_grad_(True)
-        targets = torch.tensor(targets).float().clone().detach().requires_grad_(True)
-        loss = criterion(seq, targets)
+        outputs = outputs.view(-1, 19)
+        targets = targets.view(-1)
+        loss = criterion(outputs, targets)
         loss.backward()
         optimizer.step()
         total_loss += loss.item()
@@ -35,32 +34,23 @@ def train(model, dataloader, criterion, optimizer, device):
 def evaluate(model, dataloader, criterion, device):
     model.eval()
     total_loss = 0.0
-    correct = 0
-    total = 0
     with torch.no_grad():
         for inputs, targets in tqdm(dataloader, desc="Evaluating"):
             inputs, targets = inputs.to(device), targets.to(device)
             outputs = model(inputs)
-            seq = constructSeq(outputs, targets)
-            seq = torch.tensor(seq).double().clone().detach().requires_grad_(True)
-            targets = torch.tensor(targets).double().clone().detach().requires_grad_(True)
-            loss = criterion(seq, targets)
+            outputs = outputs.view(-1, 19)
+            targets = targets.view(-1)
+            loss = criterion(outputs, targets)
             total_loss += loss.item()
-            total += targets.size(0)
     return total_loss / len(dataloader)
-
-def collate_fn(batch):
-    inputs, targets = zip(*batch)
-    inputs_padded = pad_sequence(inputs, batch_first=True, padding_value=0)  # Pad inputs with 0
-    targets_padded = pad_sequence(targets, batch_first=True, padding_value=-1)  # Pad targets with -1
-    return inputs_padded, targets_padded
 
 input_size = 54
 hidden_size = 128
-output_size = 18
-num_layers = 3
+output_size = 19
+seq_len = 200
+num_layers = 100
 batch_size = 64
-learning_rate = 0.001
+learning_rate = 3e-5
 num_epochs = 1000
 
 data, targets = loadData(train = True)
@@ -74,12 +64,12 @@ train_targets, val_targets = targets[:split_index], targets[split_index:]
 train_dataset = RubiksCubeDataset(train_data, train_targets)
 val_dataset = RubiksCubeDataset(val_data, val_targets)
 
-train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, collate_fn = collate_fn)
-val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, collate_fn = collate_fn)
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = KwikKubeNN(input_size, hidden_size, output_size).to(device)
-criterion = nn.MSELoss()
+model = KwikKubeNN(input_size, hidden_size, output_size, num_layers, seq_len).to(device)
+criterion = nn.CrossEntropyLoss()
 optimizer = optim.AdamW(model.parameters(), lr=learning_rate)
 
 for epoch in range(num_epochs):
