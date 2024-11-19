@@ -28,7 +28,8 @@ move_map = {
     'U': 6, 'U\'': 7, 'U2': 8,
     'L': 9, 'L\'': 10, 'L2': 11,
     'B': 12, 'B\'': 13, 'B2': 14,
-    'D': 15, 'D\'': 16, 'D2': 17
+    'D': 15, 'D\'': 16, 'D2': 17,
+    "BOT": 18
 }
 
 reverse_move_map = {
@@ -37,7 +38,8 @@ reverse_move_map = {
     6: 'U', 7: 'U\'', 8: 'U2',
     9: 'L', 10: 'L\'', 11: 'L2',
     12: 'B', 13: 'B\'', 14: 'B2',
-    15: 'D', 16: 'D\'', 17: 'D2'
+    15: 'D', 16: 'D\'', 17: 'D2',
+    18: "BOT"
 }
 
 def getRandomScramble(moves):
@@ -74,6 +76,8 @@ def encodeMoves(moves):
 def decodeMoves(encoded_moves):
     global reverse_move_map
     decoded_moves = [reverse_move_map[code] for code in encoded_moves]
+    while "BOT" in decoded_moves:
+        decoded_moves.remove("BOT")
     return " ".join(decoded_moves)
 
 def getToDesired(config="random"):
