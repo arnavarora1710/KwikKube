@@ -4,11 +4,6 @@ class Cube:
     def __init__(self):
         self.cube = np.eye(24, dtype=bool)
         self.ref = np.eye(24, dtype=bool)
-        # self.mapping = {}
-        # # mapping[i] stores j such that cube[j][i] = 1 for cubelet i
-        # # meaning that (original) cubelet i is at cubelet j
-        # for i in range(24):
-        #     self.mapping[i] = i
 
     def isValidMove(self):
         # determinant of cube must not be 0
